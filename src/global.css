@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @layer base {
 	.h1 {
 		font-size: clamp(100%, 1rem + 2vw * 2, 40px * 1.5);

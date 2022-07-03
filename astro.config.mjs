@@ -4,6 +4,10 @@ import tailwind from '@astrojs/tailwind';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'example.com',
-	integrations: [tailwind()]
+	// site: 'example.com',
+	integrations: [
+		tailwind({
+			config: { applyBaseStyles: false }
+		})
+	]
 });
