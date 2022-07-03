@@ -1,0 +1,51 @@
+@layer base {
+	.h1 {
+		font-size: clamp(100%, 1rem + 2vw * 2, 40px * 1.5);
+		line-height: clamp(100%, 1rem + 1vh * 2, 36px * 2);
+	}
+
+	.h2 {
+		font-size: clamp(100%, 1rem + 2vw * 1.25, 40px * 1.25);
+		line-height: clamp(100%, 1rem + 1vh * 1.25, 36px * 1.25);
+	}
+
+	.h3 {
+		font-size: clamp(100%, 1rem + 2vw * 0.8, 40px * 0.8);
+		line-height: clamp(100%, 1rem + 1vh * 0.8, 36px * 0.8);
+	}
+
+	.h4 {
+		font-size: clamp(100%, 1rem + 2vw * 0.6, 40px * 0.6);
+		line-height: clamp(100%, 1rem + 1vh * 0.6, 36px * 0.6);
+	}
+
+	.p {
+		font-size: clamp(100%, 1rem + 2vw * 0.4, 40px * 0.4);
+		line-height: clamp(100%, 1rem + 1vh * 0.4, 36px * 0.4);
+	}
+
+	h1 {
+		font-size: clamp(100%, 1rem + 2vw * 1.5, 40px * 1.5);
+		line-height: clamp(100%, 1rem + 1vh * 1.5, 36px * 1.5);
+	}
+
+	h2 {
+		font-size: clamp(100%, 1rem + 2vw * 1.25, 40px * 1.25);
+		line-height: clamp(100%, 1rem + 1vh * 1.25, 36px * 1.25);
+	}
+
+	h3 {
+		font-size: clamp(100%, 1rem + 2vw * 0.8, 40px * 0.8);
+		line-height: clamp(100%, 1rem + 1vh * 0.8, 36px * 0.8);
+	}
+
+	h4 {
+		font-size: clamp(100%, 1rem + 2vw * 0.6, 40px * 0.6);
+		line-height: clamp(100%, 1rem + 1vh * 0.6, 36px * 0.6);
+	}
+
+	p {
+		font-size: clamp(100%, 1rem + 2vw * 0.4, 40px * 0.4);
+		line-height: clamp(100%, 1rem + 1vh * 0.4, 36px * 0.4);
+	}
+}
