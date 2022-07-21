@@ -53,3 +53,21 @@
 		line-height: clamp(100%, 1rem + 1vh * 0.4, 36px * 0.4);
 	}
 }
+
+:root {
+	--primary-0: #ffffff;
+	--primary-1: #D9D9D9;
+	--primary-2: #A1A5A6;
+	--primary-dark-0: #5F6E73;
+	--primary-dark-1: #4A5559;
+	--primary-dark-2: #2A3133;
+	--secondary-0: #B0FFFF;
+	--secondary-1: #96D4E0;
+	--secondary-2: #71A1AB;
+	--secondary-dark-0: #394D59;
+	--accent-1-0: #FF9E80;
+	--accent-1-1: #FF6E40;
+	--accent-1-2: #FF5722;
+	--accent-1-3: #FF3D00;
+	--accent-1-dark-0: #DD2C00;
+}
