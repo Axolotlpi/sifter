@@ -10,11 +10,11 @@ const { title, description } = Astro.props as Props;
 ---
 
 <!DOCTYPE html>
-<html lang='en'>
+<html lang="en">
 	<head>
 		<BaseHead title={title} description={description} />
 	</head>
 	<body>
-		<slot></slot>
+		<slot />
 	</body>
 </html>

@@ -17,7 +17,7 @@ module.exports = {
 				'accent-1-1': '#FF6E40',
 				'accent-1-2': '#FF5722',
 				'accent-1-3': '#FF3D00',
-				'accent-1-dark': '#DD2C00',
+				'accent-1-dark': '#DD2C00'
 			},
 			fontFamily: {
 				monospace: ['Fira Code', 'monospace']
