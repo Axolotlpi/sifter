@@ -1,8 +1,8 @@
 <script lang="ts">
-    import Button from './navigation/Button.svelte';
-    import Logo from './Logo.svelte';
-    import HorizontalBar from './navigation/HorizontalBar.svelte';
-    import VerticalBar from './navigation/VerticalBar.svelte';
+    import Button from '../Button.svelte';
+    import Logo from '../Logo.svelte';
+    import HorizontalBar from '../HorizontalBar.svelte';
+    import VerticalBar from '../VerticalBar.svelte';
     export let links;
     export let activeHref;
     export let logoLarge;
