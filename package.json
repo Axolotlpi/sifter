@@ -18,6 +18,7 @@
 		"tailwindcss": "^3.1.4"
 	},
 	"dependencies": {
-		"promise-file-reader": "^1.0.3"
+		"promise-file-reader": "^1.0.3",
+		"workbox-build": "^6.5.4"
 	}
 }
