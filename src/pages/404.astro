@@ -1,8 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/compositions/Nav.svelte';
-import LogViewer from '../components/LogViewer/LogViewer.svelte';
-
 const links = [
 	{
 		href: '/',
@@ -27,9 +25,10 @@ const links = [
 		logoSmall="/icons/icon-512x512.png"
 		client:load
 	/>
-	<main>
-		<div class="h-[80vh] w-full p-4 pt-0">
-			<LogViewer client:load />
-		</div>
+	<main class="w-full p-6 flex justify-center items-center">
+		<h3 class="w-3/4 font-monospace bold">
+			This is our 404 page. You probably didn't mean to come here, but we welcome you with open
+			arms. :)
+		</h3>
 	</main>
 </Layout>
