@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/compositions/Nav.svelte';
+import LogViewer from '../components/LogViewer/LogViewer.svelte';
 
 const links = [
 	{
@@ -26,5 +27,9 @@ const links = [
 		logoSmall="/icons/icon-512x512.png"
 		client:load
 	/>
-	<main></main>
+	<main>
+		<div class="h-[80vh] w-full p-4">
+			<LogViewer client:load />
+		</div>
+	</main>
 </Layout>
