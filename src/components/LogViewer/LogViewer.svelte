@@ -1,5 +1,5 @@
 <script lang="ts">
-    import TextArea from "../TextArea.svelte";
+    import TextView from "./TextView.svelte";
     import FileInput from '../compositions/FileInput.svelte';
     import Button from "../Button.svelte";
     import { readLogFiles } from "../../helpers";
@@ -21,6 +21,6 @@
                 </svg>
             </Button>
         </div>
-        <TextArea text={logFile} wrap={false}/>
+        <TextView text={logFile}/>
     {/await}
 {/if}
