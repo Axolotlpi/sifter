@@ -3,10 +3,21 @@
     import FileInput from '../compositions/FileInput.svelte';
     import Button from "../Button.svelte";
     import { readLogFiles } from "../../helpers";
+    import { readDataByTypes } from "../../IndexedDB";
+    import Dropdown from "../Dropdown.svelte";
     let openFile = true;
     let readLogPromise;//TODO: add multi file input 
+    let dropdownOptions = readDataByTypes('searchProfiles').then(searchProfiles => searchProfiles.map(profile => ({id: profile.id, text: profile.name})));
+    let selectedOption;
 </script>
 
+<div class="w-full p-4 flex justify-start items-center space-x-4">
+    {#await dropdownOptions then options }
+    <Dropdown {options} bind:selectedOption={selectedOption}>
+        <p slot="label" class="h4 font-monospace">Select Search Profile to use: </p>
+    </Dropdown>
+    {/await}
+</div>
 {#if openFile} 
     <FileInput onFileOpen={(files) => {
         readLogPromise = readLogFiles(files[0]);
@@ -21,6 +32,9 @@
                 </svg>
             </Button>
         </div>
-        <TextView text={logFile}/>
+        <TextView>
+            
+           <p>{logFile}</p> 
+        </TextView>
     {/await}
 {/if}
