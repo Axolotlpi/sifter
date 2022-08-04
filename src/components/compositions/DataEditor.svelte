@@ -53,7 +53,10 @@
 </div>
 
 <Modal active={modalActive}>
-    <TextArea bind:text={editedDataText} />
+    <!-- forced height style, due to unknown bug where tailind only applies certain vh sizes -->
+    <div class="w-full" style="height: 70vh">
+        <TextArea bind:text={editedDataText} />
+    </div>
     <div slot="bottom" class="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
         <Button onClick={() => deleteData(JSON.parse(editedDataText))}>Delete</Button>
         <Button onClick={() => modalActive = !modalActive}>Cancel</Button>
