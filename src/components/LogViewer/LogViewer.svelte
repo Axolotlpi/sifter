@@ -12,10 +12,14 @@
 </script>
 
 <div class="w-full p-4 flex justify-start items-center space-x-4">
-    {#await dropdownOptions then options }
-    <Dropdown {options} bind:selectedOption={selectedOption}>
-        <p slot="label" class="h4 font-monospace">Select Search Profile to use: </p>
-    </Dropdown>
+    {#await dropdownOptions}
+        <Dropdown options={[{id: 0, text: 'Loading...'}]} selectedOption="none">
+            <p slot="label" class="h4 font-monospace">Select Search Profile to use: </p>
+        </Dropdown>
+    {:then options} 
+        <Dropdown {options} bind:selectedOption={selectedOption}>
+            <p slot="label" class="h4 font-monospace">Select Search Profile to use: </p>
+        </Dropdown>
     {/await}
 </div>
 {#if openFile} 
