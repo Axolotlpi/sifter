@@ -1,9 +1,12 @@
 <script lang="ts">
-    export let text = "";
+    export let text = '';
 </script>
 
 <div class="w-full h-full p-2 border-primary-dark-2 border-2 rounded-lg whitespace-pre overflow-x-scroll">
-    {text}
+    <slot />
+    {#if text}
+        text
+    {/if}
 </div>
 
 <style>
