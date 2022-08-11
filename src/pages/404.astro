@@ -4,15 +4,15 @@ import Nav from '../components/compositions/Nav.svelte';
 const links = [
 	{
 		href: '/',
-		text: 'Home'
+		text: 'Searcher'
+	},
+	{
+		href: '/config',
+		text: 'Configure'
 	},
 	{
 		href: '/info',
 		text: 'Info'
-	},
-	{
-		href: '/extra',
-		text: 'Extra'
 	}
 ];
 ---
@@ -20,7 +20,7 @@ const links = [
 <Layout title="Sifter" description="A web app to sift through your logs">
 	<Nav
 		links={links}
-		activeHref="/"
+		activeHref=""
 		logoLarge="/icons/icon-512x512.png"
 		logoSmall="/icons/icon-512x512.png"
 		client:load
