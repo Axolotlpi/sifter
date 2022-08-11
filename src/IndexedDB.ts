@@ -1,6 +1,22 @@
 import { setMany, getMany, del, keys, get } from 'idb-keyval';
 import { v4 as uuidv4 } from 'uuid';
 
+export type SearchProfile = {
+	id: number;
+	type: string;
+	name: string;
+	snippets: Array<{
+		pattern: string;
+		message?: string;
+		alertLevel: number;
+	}>;
+	alertLevels: Array<{
+		level: string;
+		number: number;
+		color: string;
+	}>;
+};
+
 export const templateData = new Map();
 export const dataTypes = ['searchProfile'];
 templateData.set('searchProfile', {
@@ -10,13 +26,13 @@ templateData.set('searchProfile', {
 	snippets: [
 		{
 			pattern: 'fail',
-			alertLevel: 3
+			message: 'Fail Alert',
+			alertLevel: 0
 		}
 	],
 	alertLevels: [
 		{
 			level: 'Warning',
-			number: '3',
 			color: '#884444'
 		}
 	]
