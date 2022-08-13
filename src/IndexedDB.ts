@@ -8,12 +8,7 @@ export type SearchProfile = {
 	snippets: Array<{
 		pattern: string;
 		message?: string;
-		alertLevel: number;
-	}>;
-	alertLevels: Array<{
-		level: string;
-		number: number;
-		color: string;
+		color?: string;
 	}>;
 };
 
@@ -27,12 +22,6 @@ templateData.set('searchProfile', {
 		{
 			pattern: 'fail',
 			message: 'Fail Alert',
-			alertLevel: 0
-		}
-	],
-	alertLevels: [
-		{
-			level: 'Warning',
 			color: '#884444'
 		}
 	]
