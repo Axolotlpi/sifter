@@ -21,21 +21,16 @@
 
 <span class={className + ' lineNums'} {id} style={`--line-number: "${lineNum}";`}>
     {#if highlight.length != 0}
-        {preText}
-        <span style="background-color: {highlightColor};">
+    <!-- ugly stacked tags due to svelte's whitespace handling (avoiding whitespace) -->
+        {#if preText}{preText}{/if}<span style="background-color:{highlightColor};">
             {#if highlightLink}
                 <a href={highlightLink}>
                     {mainText}
                 </a>
             {:else if onClick}
-                <button on:click={onClick}>
-                    {mainText}
-                </button>
-            {:else}
-                {mainText}
-            {/if}
-        </span>
-        {postText}
+                <button on:click={onClick}
+                    >{mainText}</button
+            >{:else}{mainText}{/if}</span>{#if postText}{postText}{/if}
     {:else}
         {mainText}
     {/if}
@@ -50,7 +45,7 @@
         width: 2em;
         padding-right: 0.2em;
         align-items: center;
-        justify-content: end;
+        justify-content: flex-end;
         text-overflow: clip;
     }
 </style>
