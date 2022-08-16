@@ -39,7 +39,7 @@
 </script>
 
 {#await readDataPromise then dataList}
-    <div class=" grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+    <div class="p-4 flex flex-wrap rounded-lg bg-primary-2 space-x-4">
         {#if dataList}
             {#each dataList as data (data.id)}
                 <Button  onClick={() => openEditModal(data)}>{data.name}</Button>
@@ -48,7 +48,7 @@
     </div>
 {/await}
 
-<div class="w-full flex justify-center">
+<div class="mt-4 w-full flex justify-center">
     <Button onClick={createNewData}>Create New</Button>
 </div>
 
