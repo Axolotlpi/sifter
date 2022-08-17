@@ -41,7 +41,7 @@
 </div>
 
 {#if openFile} 
-    <div class="w-full h-3/4">
+    <div class="w-full h-[75vh]">
         <FileInput onFileOpen={(files) => {
             currentFile = files[0];
             setReadLogPromise();
