@@ -59,31 +59,35 @@
                 </Button>
             </div>
         </div>
-        <TextView>
-            {#each logLines.lines as {lineNum, text} (lineNum)}
-                <Liner text={text} id={`logline-${lineNum}`} highlight={highlightedLine == lineNum ? [0, null] : []} highlightColor={highlightColor} {lineNum} lineBreak />
-            {/each}
-        </TextView>
+        <div class="h-[80vh]">
+            <TextView>
+                {#each logLines.lines as {lineNum, text} (lineNum)}
+                    <Liner text={text} id={`logline-${lineNum}`} highlight={highlightedLine == lineNum ? [0, null] : []} highlightColor={highlightColor} {lineNum} lineBreak />
+                {/each}
+            </TextView>
+        </div>
         <div class="p-2 rounded-lg bg-primary-0">
-        <Tabs tabList={logLines.snippedLines.map(line => line.snippet.name)}>
-            <svelte:fragment let:currentTab={currentTab}>
-                <div class="min-h-[50vh]">
-                    {#each logLines.snippedLines as {snippet, lines} (snippet.name)}
-                        {#if lines.length > 0 && currentTab == snippet.name}
-                            <div>
-                                <TextView>
-                                    {#each lines as {text, lineNum, match} (lineNum)}
-                                        <Liner text={text} {lineNum} highlight={match} highlightColor={snippet.color} onClick={() => goToLine(lineNum)} lineBreak/>
-                                    {/each}
-                                </TextView>
-                                <p class="p-1 my-2 rounded bg-primary-dark-2 text-primary-1"><span class="font-bold text-secondary-1">Pattern: </span>"{snippet.pattern}"</p>
-                                <p class="rounded p-1 bg-primary-1 text-primary-dark-2">{snippet.message}</p>
-                            </div>
-                        {/if}
-                    {/each}
-                </div>
-            </svelte:fragment>
-        </Tabs>
+            <Tabs tabList={logLines.snippedLines.map(line => line.snippet.name)}>
+                <svelte:fragment let:currentTab={currentTab}>
+                    <div class="min-h-[50vh]">
+                        {#each logLines.snippedLines as {snippet, lines} (snippet.name)}
+                            {#if lines.length > 0 && currentTab == snippet.name}
+                                <div>
+                                    <div class="h-[60vh]">
+                                        <TextView>
+                                            {#each lines as {text, lineNum, match} (lineNum)}
+                                                <Liner text={text} {lineNum} highlight={match} highlightColor={snippet.color} onClick={() => goToLine(lineNum)} lineBreak/>
+                                            {/each}
+                                        </TextView>
+                                    </div>
+                                    <p class="p-1 my-2 rounded bg-primary-dark-2 text-primary-1"><span class="font-bold text-secondary-1">Pattern: </span>"{snippet.pattern}"</p>
+                                    <p class="rounded p-1 bg-primary-1 text-primary-dark-2">{snippet.message}</p>
+                                </div>
+                            {/if}
+                        {/each}
+                    </div>
+                </svelte:fragment>
+            </Tabs>
         </div>
     {/await}
 {/if}
