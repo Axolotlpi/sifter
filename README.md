@@ -1,6 +1,7 @@
-# Welcome to Sifter 
+# Welcome to Sifter
+
 We are currently under construction.  
-Using Astro and Svelte
+Using Svete, Vite, and PWA plugin
 
 ## 🧞 Commands
 
