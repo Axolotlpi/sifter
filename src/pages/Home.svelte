@@ -3,7 +3,6 @@
 	import LogViewer from '../components/LogViewer/LogViewer.svelte';
 	export let params;
 	export let currentRoute;
-	console.log('params ', params);
 </script>
 
 <Nav
