@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Nav from '../components/compositions/Nav.svelte';
-	import DataEditor from '../components/compositions/DataEditor.svelte';
+	import DataEditor from '../components/DataEditor/DataEditor.svelte';
 	export let params;
 	export let currentRoute;
 </script>
