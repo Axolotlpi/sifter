@@ -1,4 +1,4 @@
-import { setMany, getMany, del, keys, get } from 'idb-keyval';
+import { setMany, getMany, del, keys, get, delMany } from 'idb-keyval';
 import { v4 as uuidv4 } from 'uuid';
 
 export type SearchProfile = {
@@ -54,17 +54,26 @@ export const readDataFromDB = async function (key) {
 };
 
 export const writeToDB = async function (data) {
-	let DataKeyVal = data?.map != undefined ? data.map((a) => [a.id, a]) : [[data.id, data]];
+	let dataKeyVal = data?.map != undefined ? data.map((a) => [a.id, a]) : [[data.id, data]];
 	try {
-		await setMany(DataKeyVal);
+		await setMany(dataKeyVal);
 	} catch (error) {
 		console.log('Could not write to database: ', data, error);
 	}
 };
 
-export const deleteFromDB = async function (key) {
+export const deleteFromDB = async function (data) {
+	let keys = data?.map != undefined ? data.map((a) => a.id) : [data.id];
 	try {
-		await del(key?.id || key);
+		await delMany(keys);
+	} catch (error) {
+		console.log('Could not delete from database: ', error);
+	}
+};
+
+export const deleteManyFromDB = async function (key) {
+	try {
+		await delMany(key.map((key) => key.id));
 	} catch (error) {
 		console.log('Could not delete from database: ', error);
 	}
