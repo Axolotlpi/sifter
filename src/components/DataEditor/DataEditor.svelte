@@ -85,8 +85,7 @@
 </div>
 
 <Modal active={modalActive}>
-	<!-- forced height style, due to unknown bug where tailind only applies certain vh sizes -->
-	<div class="w-full" style="height: 70vh">
+	<div class="w-[80vw] h-[70vh]">
 		<TextArea bind:text={editedDataText} />
 	</div>
 	<div slot="bottom" class="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
