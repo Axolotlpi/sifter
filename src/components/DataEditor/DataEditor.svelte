@@ -101,12 +101,15 @@
 	ok
 	onConfirm={() => uploadedText && uploadData(uploadedText)}
 >
-	<div class="w-[60vw] h-[50vh]">
+	<div class="w-full h-[50vh] flex flex-col items-center">
 		<FileInput
 			onFileOpen={(text) => {
 				uploadedText = text;
 			}}
 		/>
+		<p class="text-accent-1-3 rounded bg-primary-1 mt-4 p-1 max-w-2xl">
+			<span class="font-bold">Warning:</span> uploading new config will erase your current config.
+		</p>
 	</div>
 </ConfirmationModal>
 
