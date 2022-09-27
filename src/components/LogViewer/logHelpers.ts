@@ -9,9 +9,22 @@ export const readLogFiles = async function (file: File) {
 	}
 };
 
-export const parseBySearchProfile = (searchProfile: SearchProfile, logText: string) => {
-	const lines = getLines(logText);
-	const snippedLines = searchProfile.snippets.map((snippet) => ({
+export type Line = { lineNum: number; text: string };
+export type SnippedLine = {
+	snippet: {
+		name: string;
+		pattern: string;
+		message?: string;
+		color?: string;
+	};
+	lines: Array<{ text: any; lineNum: any; match: Array<number> }>;
+};
+
+export const parseBySearchProfile = async (
+	searchProfile: SearchProfile,
+	lines: Array<Line>
+): Promise<{ lines: Array<Line>; snippedLines: Array<SnippedLine> }> => {
+	const snippedLines = await searchProfile.snippets.map((snippet) => ({
 		snippet: snippet,
 		lines: lines
 			.filter((line) => line.text.match(snippet.pattern))
@@ -29,7 +42,7 @@ const addMatchToLine = ({ text, lineNum }, pattern) => {
 	};
 };
 
-const getLines = (text: string): Array<{ lineNum: number; text: string }> => {
+export const getLines = async (text: string): Promise<Array<Line>> => {
 	const newlineMatch = new RegExp(/\r?\n/);
-	return text.split(newlineMatch).map((text, index) => ({ lineNum: index, text: text }));
+	return await text.split(newlineMatch).map((text, index) => ({ lineNum: index, text: text }));
 };
