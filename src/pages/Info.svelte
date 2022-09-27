@@ -24,7 +24,7 @@
 		<ul class="m-4 p-2 rounded bg-secondary-dark-0 text-primary-0">
 			<li>
 				<span class="font-bold">Custom saved searches</span> - search the same regex patterns over and
-				over, and you get to define exactly what thesepatterns are
+				over, and you get to define exactly what these patterns are
 			</li>
 			<li>
 				<span class="font-bold">No cloud dependance</span> - all of your configuration is saved in json
