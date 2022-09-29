@@ -9,23 +9,51 @@
 	import Paginator from '../Paginator.svelte';
 
 	const maxLines = 10000;
-
 	let logLines;
 	let openFile = true;
 	let currentLogs;
-	let startingLine = 0;
-	$: endingLine = logLines && logLines.length < maxLines ? logLines.length : maxLines;
-	$: visableLinesAmount = endingLine - startingLine;
-	$: getLinesPromise =
+	let startingLine;
+	let endingLine;
+	let visableLogLines;
+
+	const setBounds = (start, end) => {
+		const max = logLines?.length ? logLines.length : maxLines;
+		startingLine = start > 0 ? start : 0;
+		endingLine = end < max ? end : max;
+	};
+	const shiftBounds = (shift) => {
+		if (endingLine + shift > logLines.length) {
+			if (endingLine == logLines.length) return;
+			setBounds(startingLine + shift, logLines.length);
+		} else if (startingLine + shift < 0) {
+			if (startingLine == 0) return;
+			setBounds(0, endingLine + shift);
+		} else {
+			setBounds(startingLine + shift, endingLine + shift);
+		}
+	};
+
+	$: {
 		currentLogs &&
-		getLines(currentLogs).then((lines) => {
-			logLines = lines;
-			return lines;
-		});
+			getLines(currentLogs).then((lines) => {
+				logLines = lines;
+				if (openFile) {
+					setBounds(0, lines.length < maxLines ? lines.length : maxLines);
+					openFile = false;
+				}
+			});
+	}
+
+	const trimLogs = async (start, end, logs) => {
+		const res = logs.slice(start, end);
+		visableLogLines = res;
+		return res;
+	};
+
+	$: visableLogLinesPromise = trimLogs(startingLine, endingLine, logLines);
+
 	$: parsedLogLinesPromise =
-		selectedProfile &&
-		logLines &&
-		parseBySearchProfile(selectedProfile, logLines.slice(startingLine, endingLine + 1));
+		selectedProfile && visableLogLines && parseBySearchProfile(selectedProfile, visableLogLines);
 
 	let dropdownOptions = readDataByTypes('searchProfiles').then((searchProfiles) =>
 		searchProfiles.map((profile) => ({ ...profile, text: profile.name }))
@@ -42,17 +70,14 @@
 			.scrollIntoView({ behavior: 'smooth', block: 'center' });
 	};
 
-	const pageNext = () => {
-		const end = logLines.length - 1;
-		if (endingLine >= end) return;
-		endingLine = endingLine + visableLinesAmount < end ? endingLine + visableLinesAmount : end;
-		startingLine += visableLinesAmount;
+	const pageNext = (start, end) => {
+		setBounds(start, end);
+		shiftBounds(end - start);
 	};
 
-	const pagePrevious = () => {
-		if (startingLine >= 0) return;
-		startingLine = startingLine - visableLinesAmount > 0 ? startingLine - visableLinesAmount : 0;
-		endingLine -= visableLinesAmount;
+	const pagePrevious = (start, end) => {
+		setBounds(start, end);
+		shiftBounds(start - end);
 	};
 </script>
 
@@ -71,39 +96,36 @@
 	<Paginator
 		bind:start={startingLine}
 		bind:end={endingLine}
-		onNext={() => pageNext()}
-		onPrevious={() => pagePrevious()}
-		onEnter={(start, end) => {
-			startingLine = start;
-			endingLine = end;
-		}}
+		onNext={(start, end) => pageNext(start, end)}
+		onPrevious={(start, end) => pagePrevious(start, end)}
+		onEnter={(start, end) => setBounds(start, end)}
 	/>
 </div>
-
+{@debug endingLine}
+{@debug startingLine}
 {#if openFile}
 	<div class="w-full h-[75vh]">
 		<FileInput
 			message="Open Your Logs"
 			onFileOpen={(logs) => {
-				openFile = false;
 				currentLogs = logs;
 			}}
 			onError={() => toast.push('Failed to open file')}
 		/>
 	</div>
 {:else}
-	{#await getLinesPromise}
+	{#await visableLogLinesPromise}
 		<div class="flex justify-center items-center">
 			<div
-				class="spinner-border animate-spin inline-block w-8 h-8 border-4 border-t-secondary-dark-0 rounded-full"
+				class="spinner-border animate-spin inline-block w-8 h-8 border-4 border-t-secondary-dark-0 rounded-full z-40"
 				role="status"
 			>
 				<span class="hidden">Loading...</span>
 			</div>
 		</div>
-	{:then parsedLines}
+	{:then visableLogLines}
 		<LineArea
-			lines={parsedLines.slice(startingLine, endingLine + 1)}
+			lines={visableLogLines}
 			onExit={() => (openFile = true)}
 			{highlightedLine}
 			{highlightColor}
@@ -111,7 +133,7 @@
 		{#await parsedLogLinesPromise}
 			<div class="flex justify-center items-center">
 				<div
-					class="spinner-border animate-spin inline-block w-8 h-8 border-4 border-t-secondary-dark-0 rounded-full"
+					class="spinner-border animate-spin inline-block w-8 h-8 border-4 border-t-secondary-dark-0 rounded-full z-40"
 					role="status"
 				>
 					<span class="hidden">Loading...</span>
