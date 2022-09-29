@@ -15,6 +15,7 @@
 	let startingLine;
 	let endingLine;
 	let visableLogLines;
+	let file;
 
 	const setBounds = (start, end) => {
 		const max = logLines?.length ? logLines.length : maxLines;
@@ -81,8 +82,10 @@
 	};
 </script>
 
-<div class="w-full p-4 flex justify-between items-center space-x-4 font-monospace">
-	<div class="flex justify-center items-center space-x-2">
+<div
+	class="w-full p-4 flex flex-col sm:flex-row justify-between items-center space-x-4 font-monospace"
+>
+	<div class="p-2 sm:p-0 flex justify-center items-center space-x-2">
 		{#await dropdownOptions}
 			<Dropdown options={[{ id: 0, text: 'Loading...' }]} selectedOption="none">
 				<p slot="label">Select Search Profile to use:</p>
@@ -92,6 +95,9 @@
 				<p slot="label">Select Search Profile to use:</p>
 			</Dropdown>
 		{/await}
+		{#if file}
+			<p class="p-2 bold rounded bg-secondary-1 opacity-80">{file[0].name}</p>
+		{/if}
 	</div>
 	<Paginator
 		bind:start={startingLine}
@@ -101,11 +107,11 @@
 		onEnter={(start, end) => setBounds(start, end)}
 	/>
 </div>
-{@debug endingLine}
-{@debug startingLine}
+{@debug file}
 {#if openFile}
 	<div class="w-full h-[75vh]">
 		<FileInput
+			bind:openedFiles={file}
 			message="Open Your Logs"
 			onFileOpen={(logs) => {
 				currentLogs = logs;
