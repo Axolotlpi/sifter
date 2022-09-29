@@ -3,6 +3,7 @@
 	import Button from '../Button.svelte';
 	import { readAsText } from 'promise-file-reader';
 
+	export let openedFiles = null;
 	export let onFileOpen: (text: string) => any;
 	export let fileReceived = false;
 	export let onError: (error: string) => any = () => null;
@@ -17,7 +18,6 @@
 	};
 
 	let droppedFiles = null;
-	let openedFiles = null;
 	let fileOpenPromise;
 
 	$: if (droppedFiles || openedFiles) {
