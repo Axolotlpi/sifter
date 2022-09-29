@@ -1,9 +1,9 @@
 <script lang="ts">
 	export let start: number;
 	export let end: number;
-	export let onNext: () => any;
-	export let onPrevious: () => any;
-	export let onEnter: (start: number, end: number) => any;
+	export let onNext: (start?: number, end?: number) => any;
+	export let onPrevious: (start?: number, end?: number) => any;
+	export let onEnter: (start?: number, end?: number) => any;
 
 	$: startInput = start;
 	$: endInput = end;
@@ -11,7 +11,7 @@
 
 <div class="isolate inline-flex -space-x-px rounded-md shadow-sm">
 	<button
-		on:click={() => onPrevious()}
+		on:click={onPrevious(startInput, endInput)}
 		class="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
 	>
 		<span class="sr-only">Previous</span>
@@ -32,18 +32,18 @@
 	</button>
 	<input
 		bind:value={startInput}
-		type="text"
-		class="relative text-center w-12 border border-gray-300 bg-white  text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
+		type="number"
+		class="relative text-center w-12 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
 	/>
 
 	<input
 		bind:value={endInput}
-		type="text"
-		class="relative text-center w-12 border border-gray-300 bg-white  text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
+		type="number"
+		class="relative text-center w-12 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
 	/>
 
 	<button
-		on:click={() => onNext()}
+		on:click={onNext(startInput, endInput)}
 		class="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
 	>
 		<span class="sr-only">Next</span>
@@ -64,7 +64,7 @@
 	</button>
 	<div class="pl-1">
 		<button
-			on:click={() => onEnter(startInput, endInput)}
+			on:click={onEnter(startInput, endInput)}
 			class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
 			><svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -83,3 +83,16 @@
 		</button>
 	</div>
 </div>
+
+<style>
+	input::-webkit-outer-spin-button,
+	input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+
+	/* Firefox */
+	input[type='number'] {
+		-moz-appearance: textfield;
+	}
+</style>
