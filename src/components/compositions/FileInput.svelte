@@ -3,9 +3,11 @@
 	import Button from '../Button.svelte';
 	import { readAsText } from 'promise-file-reader';
 
-	export let openedFiles = null;
+	let openedFiles = null;
+	let droppedFiles = null;
+
+	export let receivedFile;
 	export let onFileOpen: (text: string) => any;
-	export let fileReceived = false;
 	export let onError: (error: string) => any = () => null;
 	export let message: string = 'Open';
 
@@ -17,13 +19,11 @@
 		}
 	};
 
-	let droppedFiles = null;
 	let fileOpenPromise;
 
-	$: if (droppedFiles || openedFiles) {
-		const file = droppedFiles || openedFiles;
-		fileReceived = true;
-		fileOpenPromise = readFile(file[0]).then((text) => onFileOpen(text));
+	$: if (openedFiles || droppedFiles) {
+		receivedFile = openedFiles || droppedFiles;
+		fileOpenPromise = readFile(receivedFile[0]).then((text) => onFileOpen(text));
 	}
 
 	let inputElement;
@@ -83,7 +83,7 @@
 	class="w-full h-full flex items-center justify-center border-dashed border-secondary-2 bg-primary-0 border-8 rounded-xl transition-opacity duration-300"
 	class:dragging={drag}
 >
-	{#if !fileReceived}
+	{#if !receivedFile}
 		<Button srText="file input button" onClick={() => inputElement?.click()}>
 			<p slot="left">{message}</p>
 			<svg
