@@ -10,7 +10,6 @@
 
 	const maxLines = 10000;
 	let logLines;
-	let openFile = true;
 	let currentLogs;
 	let startingLine;
 	let endingLine;
@@ -34,16 +33,12 @@
 		}
 	};
 
-	$: {
+	$: logLinesPromise =
 		currentLogs &&
-			getLines(currentLogs).then((lines) => {
-				logLines = lines;
-				if (openFile) {
-					setBounds(0, lines.length < maxLines ? lines.length : maxLines);
-					openFile = false;
-				}
-			});
-	}
+		getLines(currentLogs).then((lines) => {
+			logLines = lines;
+			setBounds(0, lines.length < maxLines ? lines.length : maxLines);
+		});
 
 	const trimLogs = async (start, end, logs) => {
 		const res = logs.slice(start, end);
@@ -51,10 +46,14 @@
 		return res;
 	};
 
-	$: visableLogLinesPromise = trimLogs(startingLine, endingLine, logLines);
+	$: visableLogLinesPromise = logLines
+		? trimLogs(startingLine, endingLine, logLines)
+		: new Promise(() => {});
 
 	$: parsedLogLinesPromise =
-		selectedProfile && visableLogLines && parseBySearchProfile(selectedProfile, visableLogLines);
+		selectedProfile && visableLogLines
+			? parseBySearchProfile(selectedProfile, visableLogLines)
+			: new Promise(() => {});
 
 	let dropdownOptions = readDataByTypes('searchProfiles').then((searchProfiles) =>
 		searchProfiles.map((profile) => ({ ...profile, text: profile.name }))
@@ -107,11 +106,11 @@
 		onEnter={(start, end) => setBounds(start, end)}
 	/>
 </div>
-{@debug file}
-{#if openFile}
+
+{#if !file}
 	<div class="w-full h-[75vh]">
 		<FileInput
-			bind:openedFiles={file}
+			bind:receivedFile={file}
 			message="Open Your Logs"
 			onFileOpen={(logs) => {
 				currentLogs = logs;
@@ -132,7 +131,7 @@
 	{:then visableLogLines}
 		<LineArea
 			lines={visableLogLines}
-			onExit={() => (openFile = true)}
+			onExit={() => (file = false)}
 			{highlightedLine}
 			{highlightColor}
 		/>
