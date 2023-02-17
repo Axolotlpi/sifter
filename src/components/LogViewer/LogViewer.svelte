@@ -33,18 +33,19 @@
 		}
 	};
 
-	$: logLinesPromise =
-		currentLogs &&
-		getLines(currentLogs).then((lines) => {
-			logLines = lines;
-			setBounds(0, lines.length < maxLines ? lines.length : maxLines);
-		});
-
 	const trimLogs = async (start, end, logs) => {
 		const res = logs.slice(start, end);
 		visableLogLines = res;
 		return res;
 	};
+
+	$: logLinesPromise =
+		currentLogs &&
+		getLines(currentLogs).then((lines) => {
+			logLines = lines;
+			if(lines.length > maxLines) toast.push('Paginated to 10000 (large file)')
+			setBounds(0, lines.length < maxLines ? lines.length : maxLines);
+		});
 
 	$: visableLogLinesPromise = logLines
 		? trimLogs(startingLine, endingLine, logLines)
