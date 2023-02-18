@@ -3,13 +3,48 @@
 	import TextView from './TextView.svelte';
 	import Liner from './Liner.svelte';
 	import type { Line, SnippedLine } from './logHelpers';
+	import { onMount } from 'svelte/internal';
 
 	export let parsedLines: { lines: Array<Line>; snippedLines: Array<SnippedLine> };
 	export let onSelectResult: (lineNum: number) => any | null = null;
+
+	let currentTab = parsedLines.snippedLines[0].snippet.name;
+	$:currentLines = parsedLines.snippedLines.find((snip) => snip.snippet.name == currentTab).lines;
+
+	let currentResult = 0;
+	const selectResult = (index) => {
+		currentResult = index;
+		onSelectResult(currentLines[index].lineNum);
+	}
+
+	const selectNext = () => {
+		if(currentResult < currentLines.length - 1)
+			selectResult(++currentResult)
+	}
+
+	const selectPrevious = () => {
+		if(currentResult > 0)
+			selectResult(--currentResult)
+	}
+
+	let tabs;
+	onMount(() => {
+		tabs.addEventListener('keydown', event => {
+			console.log(event.code)
+			if(event.code == "ArrowDown"){
+				selectNext();
+				event.stopPropagation()
+			}
+			if(event.code == "ArrowUp"){
+				selectPrevious();
+				event.stopPropagation()
+			}
+		});
+	});
 </script>
 
-<div class="p-2 rounded-lg bg-primary-0">
-	<Tabs tabList={parsedLines.snippedLines.map((line) => line.snippet.name)}>
+<div bind:this={tabs} class="p-2 rounded-lg bg-primary-0">
+	<Tabs bind:currentTab={currentTab} tabList={parsedLines.snippedLines.map((line) => line.snippet.name)}>
 		<svelte:fragment let:currentTab>
 			<div class="min-h-[50vh]">
 				{#each parsedLines.snippedLines as { snippet, lines } (snippet.name)}
@@ -17,13 +52,13 @@
 						<div>
 							<div class="h-[60vh]">
 								<TextView>
-									{#each lines as { text, lineNum, match } (lineNum)}
+									{#each lines as { text, lineNum, match }, index (lineNum)}
 										<Liner
 											{text}
 											lineNum={lineNum + ''}
 											highlight={match}
-											highlightColor={snippet.color}
-											onClick={() => onSelectResult(lineNum)}
+											highlightColor={index == currentResult ? 'var(--secondary-0)' : snippet.color}
+											onClick={() => selectResult(index)}
 											lineBreak
 										/>
 									{/each}
