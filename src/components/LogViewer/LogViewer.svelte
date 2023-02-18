@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { currentLogs, currentFiles } from './logStores'
 	import FileInput from '../compositions/FileInput.svelte';
 	import LineArea from './LineArea.svelte';
 	import { parseBySearchProfile, getLines } from './logHelpers';
@@ -10,11 +11,9 @@
 
 	const maxLines = 10000;
 	let logLines;
-	let currentLogs;
 	let startingLine;
 	let endingLine;
-	let visableLogLines;
-	let file;
+	let visableLogLines
 
 	const setBounds = (start, end) => {
 		const max = logLines?.length ? logLines.length : maxLines;
@@ -40,8 +39,8 @@
 	};
 
 	$: logLinesPromise =
-		currentLogs &&
-		getLines(currentLogs).then((lines) => {
+		$currentLogs &&
+		getLines($currentLogs).then((lines) => {
 			logLines = lines;
 			if(lines.length > maxLines) toast.push('Paginated to 10000 (large file)')
 			setBounds(0, lines.length < maxLines ? lines.length : maxLines);
@@ -95,8 +94,8 @@
 				<p slot="label">Select Search Profile to use:</p>
 			</Dropdown>
 		{/await}
-		{#if file}
-			<p class="p-2 bold rounded bg-secondary-1 opacity-80">{file[0].name}</p>
+		{#if $currentFiles}
+			<p class="p-2 bold rounded bg-secondary-1 opacity-80">{$currentFiles[0].name}</p>
 		{/if}
 	</div>
 	<Paginator
@@ -108,13 +107,13 @@
 	/>
 </div>
 
-{#if !file}
+{#if !$currentFiles}
 	<div class="w-full h-[75vh]">
 		<FileInput
-			bind:receivedFile={file}
+			bind:receivedFile={$currentFiles}
 			message="Open Your Logs"
 			onFileOpen={(logs) => {
-				currentLogs = logs;
+				$currentLogs = logs;
 			}}
 			onError={() => toast.push('Failed to open file')}
 		/>
@@ -132,7 +131,7 @@
 	{:then visableLogLines}
 		<LineArea
 			lines={visableLogLines}
-			onExit={() => (file = false)}
+			onExit={() => ($currentFiles = false)}
 			{highlightedLine}
 			{highlightColor}
 		/>
