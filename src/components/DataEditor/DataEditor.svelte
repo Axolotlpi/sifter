@@ -5,10 +5,12 @@
 	import { SvelteToast, toast } from '@zerodevx/svelte-toast';
 	import Button from '../Button.svelte';
 	import Modal from '../Modal.svelte';
-	import TextArea from '../TextArea.svelte';
+	import FlatObjectEditor from './FlatObjectEditor.svelte';
 	import ConfirmationModal from '../compositions/ConfirmationModal.svelte';
 	import FileInput from '../compositions/FileInput.svelte';
 	export let dataType: string;
+	export let schema: any;
+	export let validate;
 
 	let readDataPromise;
 	let uploadDataModal = false;
@@ -17,10 +19,12 @@
 		readDataPromise = readDataByTypes(dataType);
 	});
 
-	let editedDataText;
+	let editedData;
 	let modalActive = false;
+
+
 	const openEditModal = (data) => {
-		editedDataText = JSON.stringify(data, null, '  ');
+		editedData = data;
 		modalActive = true;
 	};
 
@@ -30,9 +34,14 @@
 	};
 
 	const saveData = async (data) => {
-		await writeToDB(data);
-		readDataPromise = readDataByTypes(dataType);
-		modalActive = false;
+		try {
+			validate(data);
+			await writeToDB(data);
+			readDataPromise = readDataByTypes(dataType);
+			modalActive = false;
+		} catch (error) {
+			toast.push(error.message);
+		}
 	};
 
 	const deleteData = async (data) => {
@@ -46,6 +55,10 @@
 		downloadText(`${dataType}.json`, JSON.stringify(data));
 	};
 
+	const refreshData = async () => {
+		readDataPromise = readDataByTypes(dataType);
+	};
+	
 	let uploadedText;
 	const uploadData = async (text: string) => {
 		const oldData = await readDataByTypes(dataType);
@@ -85,13 +98,13 @@
 </div>
 
 <Modal active={modalActive}>
-	<div class="w-[80vw] h-[70vh]">
-		<TextArea bind:text={editedDataText} />
+	<div class="w-[80vw] h-[70vh] overflow-scroll pr-2">
+		<FlatObjectEditor {schema} bind:editedObject={editedData}/>
 	</div>
 	<div slot="bottom" class="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-		<Button onClick={() => deleteData(tryParseJSON(editedDataText))}>Delete</Button>
-		<Button onClick={() => (modalActive = !modalActive)}>Cancel</Button>
-		<Button onClick={() => saveData(tryParseJSON(editedDataText))}>Save</Button>
+		<Button onClick={() => deleteData(editedData)}>Delete</Button>
+		<Button onClick={() => {refreshData(); modalActive = false}}>Cancel</Button>
+		<Button onClick={() => saveData(editedData)}>Save</Button>
 	</div>
 </Modal>
 
