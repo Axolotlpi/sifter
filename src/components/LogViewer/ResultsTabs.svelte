@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { selectedProfile } from './logStores';
 	import Tabs from '../Tabs.svelte';
 	import TextView from './TextView.svelte';
 	import Liner from './Liner.svelte';
@@ -57,7 +58,7 @@
 											{text}
 											lineNum={lineNum + ''}
 											highlight={match}
-											highlightColor={index == currentResult ? 'var(--secondary-0)' : snippet.color}
+											highlightColor={index == currentResult ? $selectedProfile.highlightColor : snippet.color}
 											onClick={() => selectResult(index)}
 											lineBreak
 										/>

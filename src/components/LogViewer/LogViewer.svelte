@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { currentLogs, currentFiles } from './logStores'
+	import { currentLogs, currentFiles, selectedProfile } from './logStores'
 	import FileInput from '../compositions/FileInput.svelte';
 	import LineArea from './LineArea.svelte';
 	import { parseBySearchProfile, getLines } from './logHelpers';
@@ -51,17 +51,19 @@
 		: new Promise(() => {});
 
 	$: parsedLogLinesPromise =
-		selectedProfile && visableLogLines
-			? parseBySearchProfile(selectedProfile, visableLogLines)
+		$selectedProfile && visableLogLines
+			? parseBySearchProfile($selectedProfile, visableLogLines)
 			: new Promise(() => {});
 
 	let dropdownOptions = readDataByTypes('searchProfiles').then((searchProfiles) =>
 		searchProfiles.map((profile) => ({ ...profile, text: profile.name }))
 	);
 
-	let selectedProfile: SearchProfile;
+
+	$:highlightColor = $selectedProfile?.highlightColor;
+
 	let highlightedLine;
-	let highlightColor = 'var(--secondary-0)';
+	
 
 	const goToLine = (lineNumber) => {
 		highlightedLine = lineNumber;
@@ -90,7 +92,7 @@
 				<p slot="label">Select Search Profile to use:</p>
 			</Dropdown>
 		{:then options}
-			<Dropdown {options} bind:selectedOption={selectedProfile}>
+			<Dropdown {options} bind:selectedOption={$selectedProfile}>
 				<p slot="label">Select Search Profile to use:</p>
 			</Dropdown>
 		{/await}
@@ -133,7 +135,7 @@
 			lines={visableLogLines}
 			onExit={() => ($currentFiles = false)}
 			{highlightedLine}
-			{highlightColor}
+			highlightColor={highlightColor}
 		/>
 		{#await parsedLogLinesPromise}
 			<div class="flex justify-center items-center">

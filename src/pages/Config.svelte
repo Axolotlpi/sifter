@@ -9,6 +9,7 @@
 		id: 'immutable',
 		type: 'immutable',
 		name: 'string',
+		highlightColor: 'color',
 		snippets: [
 			{
 			name: 'string',
