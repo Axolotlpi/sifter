@@ -1,8 +1,36 @@
 <script lang="ts">
+	import { get } from 'svelte/store';
 	import Nav from '../components/compositions/Nav.svelte';
 	import DataEditor from '../components/DataEditor/DataEditor.svelte';
 	export let params;
 	export let currentRoute;
+
+	const schema = {
+		id: 'immutable',
+		type: 'immutable',
+		name: 'string',
+		snippets: [
+			{
+			name: 'string',
+			pattern: 'string',
+			message: 'string',
+			color: 'color'
+			}
+		]
+	}
+
+	const validateSearchProfileData = (data) => {
+		if(areDuplicates(getSnippetsNames(data.snippets)))
+			throw new Error("Snippet names should be unique");
+		return true;
+	}
+	const getSnippetsNames = (snippets) => {
+		return snippets.map(snippet => snippet.name)
+	}
+	const areDuplicates = (list) => {
+		const dups = list.filter((item, index) => list.indexOf(item) !== index);
+		return (dups.length >= 1);
+	}
 </script>
 
 <Nav
@@ -16,7 +44,7 @@
 		<h2 class="p-4">Edit Your Configuration:</h2>
 		<hr />
 		<h3 class="p-4">Search Profiles:</h3>
-		<DataEditor dataType="searchProfile" />
+		<DataEditor dataType="searchProfile" {schema} validate={validateSearchProfileData}/>
 	</div>
 </main>
 
