@@ -31,14 +31,14 @@
 	let tabs;
 	onMount(() => {
 		tabs.addEventListener('keydown', event => {
-			console.log(event.code)
-			if(event.code == "ArrowDown"){
+			console.log(event.key)
+			if(event.key == "Tab" && !event.getModifierState("Shift")){
 				selectNext();
-				event.stopPropagation()
+				event.stopPropagation();
 			}
-			if(event.code == "ArrowUp"){
+			else if(event.key == "Tab" && event.getModifierState("Shift")){
 				selectPrevious();
-				event.stopPropagation()
+				event.stopPropagation();
 			}
 		});
 	});
