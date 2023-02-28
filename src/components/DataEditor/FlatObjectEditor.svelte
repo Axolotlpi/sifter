@@ -14,7 +14,7 @@
 
 <div class="grid grid-cols-5 col grid-flow-row gap-2">
     {#each properties as [label, type]}
-        <label class="bg-primary-1 p-2 col-span-1">{label} </label>
+        <label class="bg-primary-1 p-2 col-span-5 sm:col-span-1">{label} </label>
         {#if type == 'immutable'}
             <input type="text" readonly class="border-solid border-2 rounded-md col-span-4 p-1 border-secondary-dark-0 bg-primary-1" bind:value={editedObject[label]}>
         {:else if type == 'string'}
@@ -25,7 +25,7 @@
             <input type="color" class="border-solid border-2 rounded-md col-span-4 p-1 border-secondary-dark-0" bind:value={editedObject[label]}>
         {:else}
             {#if Array.isArray(type)}
-            <div class="flex flex-col col-span-4 p-1">
+            <div class="flex flex-col col-span-5 sm:col-span-4 p-1">
                 {#each editedObject[label] as item, index}
                     <div class="py-1 flex border-solid bg-primary-1 border-primary-2 border-y-2">
                         <div>
