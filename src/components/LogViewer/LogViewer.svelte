@@ -117,7 +117,7 @@
 			onFileOpen={(logs) => {
 				$currentLogs = logs;
 			}}
-			onError={() => toast.push('Failed to open file')}
+			onError={() => $currentLogs = undefined && toast.push('Failed to open file')}
 		/>
 	</div>
 {:else}
