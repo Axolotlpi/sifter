@@ -106,7 +106,7 @@
 			type="file"
 			bind:files={openedFiles}
 			bind:this={inputElement}
-			accept=".txt,.log,.json,text/plain"
+			accept=".*"
 			style="display:none"
 		/>
 	{:else}

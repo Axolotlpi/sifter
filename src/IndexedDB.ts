@@ -5,6 +5,7 @@ export type SearchProfile = {
 	id: number;
 	type: string;
 	name: string;
+	highlightColor?: string;
 	snippets: Array<{
 		name: string;
 		pattern: string;
@@ -19,6 +20,7 @@ templateData.set('searchProfile', {
 	id: 0,
 	type: 'searchProfile',
 	name: 'template',
+	highlightColor: '#66aaFF',
 	snippets: [
 		{
 			name: 'UniqueName1',

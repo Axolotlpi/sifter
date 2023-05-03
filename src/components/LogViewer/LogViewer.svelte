@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { currentLogs, currentFiles, selectedProfile } from './logStores'
 	import FileInput from '../compositions/FileInput.svelte';
 	import LineArea from './LineArea.svelte';
 	import { parseBySearchProfile, getLines } from './logHelpers';
@@ -10,11 +11,9 @@
 
 	const maxLines = 10000;
 	let logLines;
-	let currentLogs;
 	let startingLine;
 	let endingLine;
-	let visableLogLines;
-	let file;
+	let visableLogLines
 
 	const setBounds = (start, end) => {
 		const max = logLines?.length ? logLines.length : maxLines;
@@ -33,35 +32,38 @@
 		}
 	};
 
-	$: logLinesPromise =
-		currentLogs &&
-		getLines(currentLogs).then((lines) => {
-			logLines = lines;
-			setBounds(0, lines.length < maxLines ? lines.length : maxLines);
-		});
-
 	const trimLogs = async (start, end, logs) => {
 		const res = logs.slice(start, end);
 		visableLogLines = res;
 		return res;
 	};
 
+	$: logLinesPromise =
+		$currentLogs &&
+		getLines($currentLogs).then((lines) => {
+			logLines = lines;
+			if(lines.length > maxLines) toast.push('Paginated to 10000 (large file)')
+			setBounds(0, lines.length < maxLines ? lines.length : maxLines);
+		});
+
 	$: visableLogLinesPromise = logLines
 		? trimLogs(startingLine, endingLine, logLines)
 		: new Promise(() => {});
 
 	$: parsedLogLinesPromise =
-		selectedProfile && visableLogLines
-			? parseBySearchProfile(selectedProfile, visableLogLines)
+		$selectedProfile && visableLogLines
+			? parseBySearchProfile($selectedProfile, visableLogLines)
 			: new Promise(() => {});
 
 	let dropdownOptions = readDataByTypes('searchProfiles').then((searchProfiles) =>
 		searchProfiles.map((profile) => ({ ...profile, text: profile.name }))
 	);
 
-	let selectedProfile: SearchProfile;
+
+	$:highlightColor = $selectedProfile?.highlightColor;
+
 	let highlightedLine;
-	let highlightColor = 'var(--secondary-0)';
+	
 
 	const goToLine = (lineNumber) => {
 		highlightedLine = lineNumber;
@@ -90,12 +92,12 @@
 				<p slot="label">Select Search Profile to use:</p>
 			</Dropdown>
 		{:then options}
-			<Dropdown {options} bind:selectedOption={selectedProfile}>
+			<Dropdown {options} bind:selectedOption={$selectedProfile}>
 				<p slot="label">Select Search Profile to use:</p>
 			</Dropdown>
 		{/await}
-		{#if file}
-			<p class="p-2 bold rounded bg-secondary-1 opacity-80">{file[0].name}</p>
+		{#if $currentFiles}
+			<p class="p-2 bold rounded bg-secondary-1 opacity-80">{$currentFiles[0].name}</p>
 		{/if}
 	</div>
 	<Paginator
@@ -107,15 +109,15 @@
 	/>
 </div>
 
-{#if !file}
+{#if !$currentFiles}
 	<div class="w-full h-[75vh]">
 		<FileInput
-			bind:receivedFile={file}
+			bind:receivedFile={$currentFiles}
 			message="Open Your Logs"
 			onFileOpen={(logs) => {
-				currentLogs = logs;
+				$currentLogs = logs;
 			}}
-			onError={() => toast.push('Failed to open file')}
+			onError={() => $currentLogs = undefined && toast.push('Failed to open file')}
 		/>
 	</div>
 {:else}
@@ -131,9 +133,9 @@
 	{:then visableLogLines}
 		<LineArea
 			lines={visableLogLines}
-			onExit={() => (file = false)}
+			onExit={() => ($currentFiles = false)}
 			{highlightedLine}
-			{highlightColor}
+			highlightColor={highlightColor}
 		/>
 		{#await parsedLogLinesPromise}
 			<div class="flex justify-center items-center">
