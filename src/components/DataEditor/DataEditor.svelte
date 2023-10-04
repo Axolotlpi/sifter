@@ -8,23 +8,28 @@
 	import FlatObjectEditor from './FlatObjectEditor.svelte';
 	import ConfirmationModal from '../compositions/ConfirmationModal.svelte';
 	import FileInput from '../compositions/FileInput.svelte';
+	import Toggle from '../Toggle.svelte';
+	import TextArea from '../TextArea.svelte'
 	export let dataType: string;
 	export let schema: any;
 	export let validate;
 
 	let readDataPromise;
 	let uploadDataModal = false;
+	let jsonEdit = false;
+	
 
 	onMount(() => {
 		readDataPromise = readDataByTypes(dataType);
 	});
 
 	let editedData;
+	let editedDataText;
 	let modalActive = false;
-
 
 	const openEditModal = (data) => {
 		editedData = data;
+		editedDataText = JSON.stringify(data, null, '  ');
 		modalActive = true;
 	};
 
@@ -97,16 +102,35 @@
 	</div>
 </div>
 
+
+
 <Modal active={modalActive}>
 	<div class="w-[80vw] h-[70vh] overflow-scroll pr-2">
+	{#if !jsonEdit}
 		<FlatObjectEditor {schema} bind:editedObject={editedData}/>
+	{:else}
+		<TextArea bind:text={editedDataText} />
+	{/if}
 	</div>
-	<div slot="bottom" class="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-		<Button onClick={() => deleteData(editedData)}>Delete</Button>
-		<Button onClick={() => {refreshData(); modalActive = false}}>Cancel</Button>
-		<Button onClick={() => saveData(editedData)}>Save</Button>
+	<div slot="bottom" class="px-4 py-3 sm:px-6 items-center sm:flex sm:flex-row-reverse">
+		
+		<div class="w-max flex flex-row-reverse ">
+			{#if !jsonEdit}
+				<Button onClick={() => deleteData(editedData)}>Delete</Button>
+				<Button onClick={() => {refreshData(); modalActive = false}}>Cancel</Button>
+				<Button onClick={() => saveData(editedData)}>Save</Button>
+			{:else}
+				<Button onClick={() => deleteData(tryParseJSON(editedDataText))}>Delete</Button>
+				<Button onClick={() => modalActive = !modalActive}>Cancel</Button>
+				<Button onClick={() => saveData(tryParseJSON(editedDataText))}>Save</Button>
+			{/if}
+		</div>
+		<div class="w-full">
+			<Toggle bind:isOn={jsonEdit} label="Edit JSON" />
+		<div>
 	</div>
 </Modal>
+
 
 <ConfirmationModal
 	bind:trigger={uploadDataModal}
