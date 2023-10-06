@@ -131,24 +131,54 @@
 			</div>
 		</div>
 	{:then visableLogLines}
-		<LineArea
-			lines={visableLogLines}
-			onExit={() => ($currentFiles = false)}
-			{highlightedLine}
-			highlightColor={highlightColor}
-		/>
-		{#await parsedLogLinesPromise}
-			<div class="flex justify-center items-center">
-				<div
-					class="spinner-border animate-spin inline-block w-8 h-8 border-4 border-t-secondary-dark-0 rounded-full z-40"
-					role="status"
-				>
-					<span class="hidden">Loading...</span>
+		{#if true}
+			<div class="">
+				<div class="overflow-clip resize-x">
+					<LineArea
+						lines={visableLogLines}
+						onExit={() => ($currentFiles = false)}
+						{highlightedLine}
+						highlightColor={highlightColor}
+					/>
+				</div>
+				<div class="overflow-scroll">
+				{#await parsedLogLinesPromise}
+					<div class="flex justify-center items-center">
+						<div
+							class="spinner-border animate-spin inline-block w-8 h-8 border-4 border-t-secondary-dark-0 rounded-full z-40"
+							role="status"
+						>
+							<span class="hidden">Loading...</span>
+						</div>
+					</div>
+				{:then parsedLogLines}
+					<ResultsTabs parsedLines={parsedLogLines} onSelectResult={(lineNum) => goToLine(lineNum)} />
+				{/await}
 				</div>
 			</div>
-		{:then parsedLogLines}
-			<ResultsTabs parsedLines={parsedLogLines} onSelectResult={(lineNum) => goToLine(lineNum)} />
-		{/await}
+		{:else}
+
+			<LineArea
+				lines={visableLogLines}
+				onExit={() => ($currentFiles = false)}
+				{highlightedLine}
+				highlightColor={highlightColor}
+			/>
+
+			{#await parsedLogLinesPromise}
+				<div class="flex justify-center items-center">
+					<div
+						class="spinner-border animate-spin inline-block w-8 h-8 border-4 border-t-secondary-dark-0 rounded-full z-40"
+						role="status"
+					>
+						<span class="hidden">Loading...</span>
+					</div>
+				</div>
+			{:then parsedLogLines}
+				<ResultsTabs parsedLines={parsedLogLines} onSelectResult={(lineNum) => goToLine(lineNum)} />
+			{/await}
+
+		{/if}
 	{/await}
 {/if}
 
